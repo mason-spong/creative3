@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="github-sym">
-      <a href="https://github.com/mason-spong/impact2">
+      <a href="https://github.com/mason-spong/creative3">
         <img src="../assets/GitHub-Mark-32px.png" />
       </a>
     </div>

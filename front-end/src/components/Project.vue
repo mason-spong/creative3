@@ -1,7 +1,7 @@
 <template>
   <div class="project">
     <div class="title-bar">
-      <h1 class="project-title">{{this.project.title}}</h1>
+      <h1 class="project-title">{{ this.project.title }}</h1>
       <p class="remove-project" v-on:click="$emit('delete-project')">-</p>
     </div>
     <Timer
@@ -25,7 +25,7 @@
 
 <script>
 import Timer from "@/components/Timer.vue";
-import axios from "axios";
+
 export default {
   name: "Project",
   props: {
@@ -33,74 +33,45 @@ export default {
   },
   data() {
     return {
+      id: 10,
       timerName: "",
       isAddTimer: false,
-      timers: [],
+      timers: [
+        {
+          title: "homework",
+          active: false,
+          time: 0,
+        },
+      ],
     };
   },
-  created() {
-    this.getTimers();
-  },
   methods: {
-    
     toggleIsAddTimer() {
       this.timerName = "";
       this.isAddTimer = !this.isAddTimer;
     },
     async addTimer() {
       if (this.timerName.length != 0) {
-        try {
-          await axios.post(`/api/projects/${this.project._id}/timers`, {
-            title: this.timerName,
-          });
-          this.timerName = "";
-          this.toggleIsAddTimer();
-          await this.getTimers();
-        } catch (error) {
-          console.log(error);
-        }
+        this.timers.push({
+          title: this.timerName,
+          active: false,
+          time: 0,
+        });
+        this.toggleIsAddTimer();
       }
-    },
-    async getTimers() {
-      try {
-        const response = await axios.get(
-          `/api/projects/${this.project._id}/timers`
-        );
-        this.timers = response.data;
-      } catch (error) {
-        console.log(error);
-      }
+
     },
     async startTimer(timer) {
-      try {
-        await axios.put(
-          `/api/projects/${this.project._id}/timers/${timer._id}/start`,
-          {}
-        );
-        await this.getTimers();
-      } catch (error) {
-        console.log(error);
-      }
+      timer.active = !timer.active;
+      
     },
     async stopTimer(timer) {
-      try {
-        await axios.put(
-          `/api/projects/${this.project._id}/timers/${timer._id}/stop`,
-          {}
-        );
-        await this.getTimers();
-      } catch (error) {
-        console.log(error);
-      }
+      timer.active = !timer.active;
     },
     async deleteTimer(timer) {
-      try {
-        await axios.delete(
-          `/api/projects/${this.project._id}/timers/${timer._id}`
-        );
-        await this.getTimers();
-      } catch (error) {
-        console.log(error);
+      const index = this.timers.indexOf(timer);
+      if (index > -1) {
+        this.timers.splice(index, 1);
       }
     },
   },
@@ -127,7 +98,7 @@ export default {
   color: whitesmoke;
 }
 
-.add-timer button  {
+.add-timer button {
   margin-left: 10px;
 }
 
@@ -151,5 +122,4 @@ export default {
   padding: 0 15px;
   background-color: #ce3d35;
 }
-
 </style>

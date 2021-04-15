@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <div class="welcome">
-        <div class="welcome-box">
-          <h1>IMPACT</h1>
-          <p>Track your time, make a difference</p>
-        </div>
+      <div class="welcome-box">
+        <h1>IMPACT</h1>
+        <p>Track your time, make a difference</p>
       </div>
+    </div>
     <div class="main-content">
       <form class="add-project-form" @submit.prevent="addProject">
         <input type="text" v-model="projectName" />
@@ -25,47 +25,34 @@
 <script>
 // @ is an alias to /src
 import Project from "@/components/Project.vue";
-import axios from "axios";
+
 import Footer from "../components/Footer.vue";
 export default {
   name: "Home",
   data() {
     return {
+      id: 10,
       projectName: "",
-      projects: [],
+      projects: [
+        { title: "CS260", _id: 0 },
+        { title: "CS330", _id: 1 },
+        { title: "CS340", _id: 2 },
+      ],
     };
-  },
-  created() {
-    this.getProjects();
   },
   methods: {
     async addProject() {
       if (this.projectName.length != 0) {
-        try {
-          await axios.post("/api/projects", {
-            title: this.projectName,
-          });
-          this.projectName = "";
-          await this.getProjects();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
-    async getProjects() {
-      try {
-        const response = await axios.get("/api/projects");
-        this.projects = response.data;
-      } catch (error) {
-        console.log(error);
+        this.projects.push({ title: this.projectName,
+        _id: this.id });
+        this.id = this.id + 1;
+        this.projectName = "";
       }
     },
     async deleteProject(project) {
-      try {
-        await axios.delete(`/api/projects/${project._id}`);
-        await this.getProjects();
-      } catch (error) {
-        console.log(error);
+      const index = this.projects.indexOf(project);
+      if (index > -1) {
+        this.projects.splice(index, 1);
       }
     },
   },

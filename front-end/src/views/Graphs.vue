@@ -16,31 +16,58 @@
 </template>
 
 <script>
-import axios from "axios";
+
 import Footer from '../components/Footer.vue';
 export default {
   name: "Graphs",
+  created() {
+    this.getTimerWidths();
+  },
   data() {
     return {
-      timers: [],
+      timers: [
+        {
+          title: "Phil 110",
+          active: false,
+          time: 25,
+          _id: 0
+        },
+        {
+          title: "Stat 240",
+          active: false,
+          time: 45,
+          _id: 1
+        },
+        {
+          title: "CS 260",
+          active: false,
+          time: 354,
+          _id: 2
+        },
+        {
+          title: "CS 340",
+          active: false,
+          time: 800,
+          _id: 3
+        },
+        {
+          title: "CS 330",
+          active: false,
+          time: 244,
+          _id: 4
+        },
+        {
+          title: "CS 404",
+          active: false,
+          time: 140,
+          _id: 5
+        }
+      ],
       timerWidthsNormalized: {},
     };
   },
-  created() {
-    this.getTimers();
-  },
-  methods: {
-    async getTimers() {
-      try {
-        const response = await axios.get("/api/timers");
-        this.timers = response.data;
-        this.timers.sort((a, b) => (a.time > b.time) ? -1 : 1)
 
-        this.getTimerWidths();
-      } catch (error) {
-        console.log(error);
-      }
-    },
+  methods: {
     getTimerWidths() {
       let times = this.timers.map((timer) => {
         return timer.time;
